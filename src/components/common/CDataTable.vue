@@ -6,7 +6,7 @@
           <TableHead class="bg-muted px-3 h-10 select-none transition-colors"
             :class="[{ 'hidden lg:table-cell uppercase': field.collapse, 'cursor-pointer hover:bg-muted': field.sortable }, field.hClass]"
             :width="field.width" v-for="field in fields" :key="field.key" @click="handleSort(field)">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 uppercase">
               {{ field.label }}
               <template v-if="field.sortable">
                 <ArrowUp v-if="localSortBy === field.key && localSortDir === 'asc'" class="h-3 w-3" />

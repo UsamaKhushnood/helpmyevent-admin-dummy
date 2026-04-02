@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-3 group">
-    <CAvatar v-if="user?.avatar" :class="avatarClass" :user="user" />
+    <CAvatar :class="avatarClass" :user="user" />
     <div class="flex-1">
       <template v-if="loading">
         <Skeleton class="h-7 w-3/4" />

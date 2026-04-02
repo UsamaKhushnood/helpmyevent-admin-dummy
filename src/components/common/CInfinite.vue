@@ -18,9 +18,10 @@
 </template>
 <script>
 import InfiniteLoading from 'v3-infinite-loading'
+import Spinner from '@/components/common/Spinner.vue'
 
 export default {
-  components: {InfiniteLoading},
+  components: {InfiniteLoading, Spinner},
   props: {
     has_more_pages: {
       type: Boolean,

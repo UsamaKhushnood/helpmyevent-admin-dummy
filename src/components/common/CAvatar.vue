@@ -7,8 +7,8 @@
       )
     "
   >
-    <AvatarImage :src="user?.avatar_url ?? user?.avatar ?? user?.image" :alt="user?.full_name"/>
-    <AvatarFallback>{{ getInitials(user?.full_name) }}</AvatarFallback>
+    <AvatarImage v-if="user?.avatar_url" :src="user?.avatar_url ?? user?.avatar ?? user?.image" :alt="user?.name"/>
+    <AvatarFallback>{{ getInitials(user?.name) }}</AvatarFallback>
   </Avatar>
 </template>
 <script setup>
