@@ -1,51 +1,38 @@
 <template>
   <div>
     <div class="flex items-center mb-3">
-      <h1 class="text-3xl font-bold tracking-tight">Users</h1>
+      <h1 class="text-3xl font-bold tracking-tight">User Management</h1>
     </div>
 
     <DefineFilters>
       <div class="flex gap-3">
-        <div class="min-w-[160px] md:-mt-5">
-          <CSelect
-            showLabel
-            placeholder="Status"
-            v-model="filters.status"
-            :options="statuses"
-          />
+        <div class="flex items-center gap-2 cursor-pointer mr-5">
+          <Label class="!cursor-pointer" for="verified">
+            <Switch id="verified" :modelValue="Number(filters.is_verified) === 1"
+              @update:modelValue="(checked) => (filters.is_verified = checked ? 1 : 0)" />
+            Verified
+          </Label>
         </div>
-        <div class="min-w-[160px] md:-mt-5">
-          <CSelect
-            showLabel
-            placeholder="Role"
-            v-model="filters.role"
-            :options="roles"
-          />
+        <div class="flex items-center gap-2 cursor-pointer mr-5">
+          <Label class="!cursor-pointer" for="banned">
+            <Switch id="banned" :modelValue="Number(filters.is_banned) === 1"
+              @update:modelValue="(checked) => (filters.is_banned = checked ? 1 : 0)" />
+            Banned
+          </Label>
         </div>
         <div class="min-w-[200px] md:-mt-5">
-          <CSelect
-            showLabel
-            placeholder="Sort"
-            :options="sortOptions"
-            v-model="filters.sort"
-          />
+          <CSelect showLabel placeholder="Sort By" :options="sortOptions" v-model="filters.sort" />
         </div>
 
         <Button @click="applyFilters">Apply filters</Button>
-        <Button @click="removeFiltered" v-if="filtersApplied" variant="outline"
-          >Remove filters
+        <Button @click="removeFiltered" v-if="filtersApplied" variant="outline">Remove filters
         </Button>
       </div>
     </DefineFilters>
 
     <div class="flex items-center gap-3 mt-5">
-      <Searchbar
-        v-model="filters.search"
-        class="lg:max-w-[400px]"
-        @search="Search"
-        @clear="removeSearch"
-        :loading="searching"
-      />
+      <Searchbar v-model="filters.search" class="lg:max-w-[400px]" @search="Search" @clear="removeSearch"
+        :loading="searching" />
       <ReuseFilters class="hidden lg:flex ms-auto" />
       <Drawer v-model:open="showDrawer">
         <DrawerTrigger class="lg:hidden">
@@ -64,14 +51,8 @@
       </Drawer>
     </div>
 
-    <CDataTable
-      class="mt-6"
-      :fields="fields"
-      :items="data.items"
-      :total="data.total"
-      :loading="loading"
-      @page-change="pageChange"
-    >
+    <CDataTable class="mt-6" :fields="fields" :items="data.items" :total="data.total" :loading="loading"
+      :itemsPerPage="20" @page-change="pageChange">
       <template #name="{ data }">
         <UserProfileCard :user="data" />
       </template>
@@ -85,32 +66,19 @@
         <StatusBadge v-else status="pending"> Pending </StatusBadge>
       </template>
       <template #actions="{ data }">
-        <Button size="xs" @click="$router.push(`/users/${data.id}/threads`)">
+        <Button size="xs" @click="$router.push(`/users/${data.id}/chat`)">
           View Chat
         </Button>
       </template>
     </CDataTable>
-    <CDialog
-      contentClass="max-w-[540px]"
-      ref="dialog"
-      @hide="hideDialog"
-      title="Verification Documents"
-      hideFooter
-      v-slot="{ hide }"
-    >
+    <CDialog contentClass="max-w-[540px]" ref="dialog" @hide="hideDialog" title="Verification Documents" hideFooter
+      v-slot="{ hide }">
       <div>
         <div class="space-y-3 py-6">
-          <div
-            class="rounded-lg border bg-background p-4 flex items-center justify-between"
-            v-for="(file, index) in selected.verification_document"
-            :key="file.id"
-          >
+          <div class="rounded-lg border bg-background p-4 flex items-center justify-between"
+            v-for="(file, index) in selected.verification_document" :key="file.id">
             <div class="flex items-center gap-3">
-              <img
-                width="36"
-                src="@/assets/images/pdf-icon.png"
-                alt="pdf icon"
-              />
+              <img width="36" src="@/assets/images/pdf-icon.png" alt="pdf icon" />
               <div>
                 <h3 class="text-sm font-medium truncate max-w-[280px]">
                   {{ file.name }}
@@ -120,14 +88,10 @@
                 </h3>
               </div>
             </div>
-            <Button size="xs" @click="$filters.downloadFile(file.url)"
-              >Download</Button
-            >
+            <Button size="xs" @click="$filters.downloadFile(file.url)">Download</Button>
           </div>
         </div>
-        <Button variant="outline" @click="hide" class="ms-auto block"
-          >Close</Button
-        >
+        <Button variant="outline" @click="hide" class="ms-auto block">Close</Button>
       </div>
     </CDialog>
   </div>
@@ -137,6 +101,7 @@ import CDataTable from "@/components/common/CDataTable.vue";
 import CDialog from "@/components/common/CDialog.vue";
 import CSelect from "@/components/common/form/CSelect.vue";
 import Searchbar from "@/components/common/Searchbar.vue";
+import StatusBadge from "@/components/common/StatusBadge.vue";
 import UserProfileCard from "@/components/common/UserProfileCard.vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -150,13 +115,14 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
 import { downloadFile } from "@/lib/filters.js";
 import { useUsersStore } from "@/stores/index.js";
 import { createReusableTemplate } from "@vueuse/core";
 import { SlidersHorizontal } from "lucide-vue-next";
 import { mapActions } from "pinia";
-import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const [DefineFilters, ReuseFilters] = createReusableTemplate();
 export default {
@@ -169,6 +135,8 @@ export default {
     CDataTable,
     Toggle,
     Badge,
+    Label,
+    Switch,
     Drawer,
     DrawerContent,
     DrawerHeader,
@@ -197,22 +165,13 @@ export default {
         { value: "latest", label: "Latest" },
         { value: "oldest", label: "Oldest" },
       ],
-      statuses: [
-        { label: "All", value: "all" },
-        { label: "Active", value: "active" },
-        { label: "Restricted", value: "restricted" },
-      ],
-      roles: [
-        { label: "All", value: "all" },
-        { label: "Admin", value: "admin" },
-        { label: "User", value: "user" },
-        { label: "Coach", value: "coach" },
-      ],
       filters: {
         search: "",
-        status: "all",
         sort: "latest",
-        role: "all",
+        is_verified: 0,
+        is_banned: 0,
+        created_from: "",
+        created_to: "",
       },
       fields: [
         { key: "name", label: "Name" },
@@ -250,8 +209,14 @@ export default {
     getData() {
       this.loading = true;
       this.getAll({
+        search: this.filters.search ?? "",
+        per_page: this.per_page,
         page: this.page,
-        ...this.filters,
+        sort: this.filters.sort ?? "latest",
+        "filters[is_verified]": this.filters.is_verified ?? "",
+        "filters[is_banned]": this.filters.is_banned ?? "",
+        "filters[created_from]": this.filters.created_from ?? "",
+        "filters[created_to]": this.filters.created_to ?? "",
       })
         .then((res) => {
           this.data = res;
@@ -273,9 +238,11 @@ export default {
       this.filtersApplied = false;
       this.filters = {
         search: "",
-        status: "all",
         sort: "latest",
-        role: "all",
+        is_verified: 0,
+        is_banned: 0,
+        created_from: "",
+        created_to: "",
       };
       this.showDrawer = false;
       this.getData();

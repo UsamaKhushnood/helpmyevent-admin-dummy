@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 relative cursor-pointer " :class="[
-    $route.params.id == thread.id && !dropdownItem
-      ? 'bg-accent text-accent-foreground font-semibold'
+    $route.params.chat_id == thread.id && !dropdownItem
+      ? 'bg-accent text-accent-foreground'
       : 'hover:bg-accent text-foreground group'
   ]" @click="openThread(thread)" role="button">
     <div class="flex gap-3 items-center">
@@ -46,6 +46,6 @@ const router = useRouter()
 
 const openThread = (thread) => {
   emit('threadClick')
-  router.push(`/chat/${thread.id}`)
+  router.push(`/users/${route.params.id}/chat/${thread.id}`)
 }
 </script>

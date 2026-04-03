@@ -1,11 +1,11 @@
 import ChatLayout from '../layouts/ChatLayout.vue'
 
 export default {
-  path: '/chat',
+  path: '/users/:id/chat',
   component: ChatLayout,
   children: [
     {
-      path: '/chat',
+      path: '',
       name: 'chat',
       components: {
         default: ChatLayout,
@@ -17,7 +17,7 @@ export default {
       }
     },
     {
-      path: '/chat/:id',
+      path: ':chat_id',
       name: 'chat-id',
       components: {
         default: ChatLayout,

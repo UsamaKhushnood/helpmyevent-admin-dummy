@@ -39,22 +39,7 @@
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <IconUserCircle />
-              Account
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <IconCreditCard />
-              Billing
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <IconNotification />
-              Notifications
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem @click="useAuthStore().Logout">
             <IconLogout />
             Log out
           </DropdownMenuItem>
@@ -65,11 +50,8 @@
 </template>
 <script setup lang="ts">
 import {
-  IconCreditCard,
   IconDotsVertical,
-  IconLogout,
-  IconNotification,
-  IconUserCircle,
+  IconLogout
 } from "@tabler/icons-vue"
 
 import {
@@ -80,17 +62,17 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem
 } from '@/components/ui/sidebar'
+import { useAuthStore } from "@/stores"
 
 interface User {
   name: string
@@ -101,5 +83,7 @@ interface User {
 defineProps<{
   user: User
 }>()
+
+
 
 </script>

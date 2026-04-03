@@ -30,7 +30,7 @@ export const useChatStore = defineStore('chat', {
         this.threadsData.items = []
       }
       return api
-        .get(`/threads`, { params })
+        .get(`/admin/users/${router.currentRoute.value.params.id}/threads`, { params })
         .then((response) => {
           this.unreadCount = response.data.unread_count
           this.threadsData.total = response.data.data.total
@@ -61,7 +61,7 @@ export const useChatStore = defineStore('chat', {
       this.loadingChat = true
       this.markThreadAsUnread(id)
       return api
-        .get(`/threads/${id}`, { params })
+        .get(`/admin/users/${router.currentRoute.value.params.id}/threads/${id}`, { params })
         .then((response) => {
           this.chat = response.data.data
           eventBus.emit('chatLoaded')

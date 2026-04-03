@@ -1,10 +1,9 @@
-import { createRouter, createWebHistory } from "vue-router";
+import WrapperLayout from "@/layouts/WrapperLayout.vue";
 import { useAuthStore } from "@/stores";
 import NProgress from "nprogress";
-import WrapperLayout from "@/layouts/WrapperLayout.vue";
-import dashboardRoutes from "./dashboard.routes.js";
+import { createRouter, createWebHistory } from "vue-router";
 import authRoutes from "./auth.routes.js";
-import chatRoutes from "../modules/chat/routes/chat.routes.js";
+import dashboardRoutes from "./dashboard.routes.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +14,6 @@ const router = createRouter({
       children: [
         dashboardRoutes,
         authRoutes,
-        chatRoutes,
         {
           path: "/no-permission",
           name: "403",

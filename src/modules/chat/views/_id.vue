@@ -14,7 +14,7 @@
     </CardHeader>
 
     <CardContent id="messagesContainer" ref="messagesContainer"
-      class="h-[calc(100%-140px)] container overflow-auto border-t py-6">
+      class="h-[calc(100%-40px)] container overflow-auto border-t py-6">
       <CInfinite :has_more_pages="pagination.has_more_pages" :loading="loading" @load="load" />
       <ChatSkeleton v-if="loading && firstLoad" />
       <div v-for="(groupedMessages, date) in dateGroupedMessages" :key="date" class="my-6">
@@ -29,62 +29,22 @@
       </div>
     </CardContent>
 
-    <CardFooter class="relative flex items-center container absolute bottom-0 left-0" @click="focusMessageInput">
-      <div class="w-full">
-        <div class="px-4 py-2">
-          <Badge variant="accent" class="py-1 ps-3 pr-1" v-if="form.file">
-            {{ form.file.name }}
-            <Button variant="outline" size="icon" class="p-0 h-auto rounded-full w-fit ms-3" @click="removeFile">
-              <X />
-            </Button>
-          </Badge>
-        </div>
-        <div class="relative h-18 flex items-center border-t px-4">
-          <div class="relative  ">
-            <Button :loading="uploading" size="icon" variant="ghost"
-              class="relative bg-transparent text-foreground hover:text-primary h-10 w-10 rounded-full"
-              @click="triggerUploader">
-              <Paperclip size="24" class="!w-6 !h-6" />
-              <input ref="fileUploader" accept=".jpeg,.png,.pdf,.doc,.docx" hidden type="file"
-                @change="handleFileSelect" />
-              <div v-if="form.file"
-                class="absolute flex items-center justify-center top-0 right-0 bg-primary text-[10px] text-primary-foreground size-4 rounded-full">
-                1
-              </div>
-            </Button>
-          </div>
-          <Textarea ref="messageInput" placeholder="Write message here..."
-            class="rounded-none min-h-auto border-0 !border-border bg-background resize-none scrollbar-hide max-h-13 mb-0.5"
-            @keydown.enter="handleEnter" rows="1" v-model="form.text" />
-          <div>
-            <Button :disabled="isDiabled" class="gap-2 px-2 !w-fit rounded-xl h-10" @click="SendMessage"
-              variant="default">
-              <Send class="!w-6 !h-6" />
-            </Button>
-          </div>
-        </div>
-      </div>
-    </CardFooter>
+
   </Card>
 </template>
 <script setup>
 import CAvatar from '@/components/common/CAvatar.vue'
 import CInfinite from '@/components/common/CInfinite.vue'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Textarea } from '@/components/ui/textarea'
 import { formatDate } from '@/filters'
 import eventBus from '@/services/eventBus'
 import { useAuthStore, useChatStore } from '@/stores'
-import { Paperclip, Send, X } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -130,7 +90,7 @@ const previousScrollTop = ref(0)
 const messagesContainer = ref(null)
 const messageInput = ref(null)
 
-const chatId = computed(() => String(route.params.id ?? ''))
+const chatId = computed(() => String(route.params.chat_id ?? ''))
 const isDiabled = computed(() => (!form.text && !form.file))
 
 const scrollContainer = computed(() => messagesContainer.value?.$el)

@@ -21,7 +21,7 @@ const props = defineProps({
       <SidebarMenu>
         <SidebarMenuItem v-for="item in items" :key="item.title">
           <RouterLink :to="item.url">
-            <SidebarMenuButton :tooltip="item.title">
+            <SidebarMenuButton :tooltip="item.title" :isActive="$route.path === item.url">
               <component :is="item.icon" v-if="item.icon" />
               <span>{{ item.title }}</span>
             </SidebarMenuButton>

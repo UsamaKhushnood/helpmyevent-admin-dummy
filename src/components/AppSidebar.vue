@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import {
-  IconChartBar,
-  IconDashboard,
   IconInnerShadowTop,
   IconUsers
 } from "@tabler/icons-vue"
@@ -25,21 +23,21 @@ const data = {
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
-    {
-      title: "Dashboard",
-      url: "/",
-      icon: IconDashboard,
-    },
-    {
-      title: "Chats Monitoring",
-      url: "/chat",
-      icon: IconChartBar,
-    },
+    // {
+    //   title: "Dashboard",
+    //   url: "/",
+    //   icon: IconDashboard,
+    // },
     {
       title: "User Management",
       url: "/users",
       icon: IconUsers,
     },
+    // {
+    //   title: "Chats Monitoring",
+    //   url: "/chat",
+    //   icon: IconChartBar,
+    // },
   ],
 }
 </script>

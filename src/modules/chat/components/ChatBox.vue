@@ -1,8 +1,16 @@
 <template>
   <div class="flex gap-4 group">
     <div :class="[isSent ? 'ml-auto mr-4' : 'ml-4']">
+      <div class="mb-2 text-sm font-medium flex items-center gap-1">
+        <div class="rounded-full p-1 bg-muted">
+          <UserRound size="16" />
+        </div>
+        <h6>
+          {{ message.user.name }}
+        </h6>
+      </div>
       <div class="   px-4 py-3 rounded-2xl mb-2 md:w-fit relative ms-auto"
-        :class="[isSent ? 'bg-green-100 rounded-tr-none' : 'bg-neutral-100 rounded-tl-none', { 'animate-pulse bg-primary/20 ': message?.loading }]">
+        :class="[isSent ? 'bg-green-100 dark:bg-green-900 rounded-tr-none' : 'bg-neutral-100 dark:bg-secondary rounded-tl-none', { 'animate-pulse bg-primary/20 ': message?.loading }]">
         <div class="my-2" v-if="message.file">
           <div v-if="isImage(message.file.type)" class="w-fit h-[200px]">
             <Image
@@ -43,9 +51,12 @@ import Image from '@/components/common/Image.vue'
 import { Button } from '@/components/ui/button'
 import { formatFileSize, formatTime, isImage } from '@/filters'
 import { useAuthStore } from '@/stores'
-import { CloudDownload } from 'lucide-vue-next'
+import { CloudDownload, UserRound } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+
 
 const props = defineProps({
   message: {
@@ -57,7 +68,9 @@ const props = defineProps({
 const authStore = useAuthStore()
 const { user } = storeToRefs(authStore)
 
-const isSent = computed(() => props.message?.user?.id === user.value?.id)
+const route = useRoute()
+
+const isSent = computed(() => props.message?.user?.id === route.params.id)
 
 const getFilePreview = (file) => {
   if (!file) return ''
